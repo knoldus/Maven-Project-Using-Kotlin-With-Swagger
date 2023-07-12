@@ -13,39 +13,37 @@ import java.io.IOException
 
 @Repository("network")
 class NetworkDataSource(
-        @Autowired private val restTemplate: RestTemplate,
-        @Value("http://54.193.31.159/banks") private val bankApiUrl: String
+
+@Autowired private val restTemplate: RestTemplate,
+@Value("\${bank.api.url}") private val bankApiUrl: String
+
 ) : BankDataSource {
 
     override fun getBanks(): Collection<Bank> {
         val response: ResponseEntity<BankList> =
-                restTemplate.getForEntity<BankList>("$bankApiUrl/banks")
+                restTemplate.getForEntity<BankList>("$bankApiUrl")
         return response.body?.results
                 ?: throw IOException("Could not fetch banks from the network")
     }
 
     override fun retrieveBank(accountNum: String): Bank {
         val response: ResponseEntity<Bank> =
-                restTemplate.getForEntity("$bankApiUrl/banks/$accountNum", Bank::class.java)
+                restTemplate.getForEntity("$bankApiUrl/$accountNum", Bank::class.java)
         return response.body
                 ?: throw IOException("Could not retrieve bank with account number $accountNum from the network")
     }
 
     override fun createBank(bank: Bank): Bank {
-        restTemplate.postForObject<Unit>("$bankApiUrl/banks", bank, Unit::class.java)
+        restTemplate.postForObject<Unit>("$bankApiUrl", bank, Unit::class.java)
         return bank
     }
 
     override fun updateBank(bank: Bank): Bank {
-        restTemplate.put("$bankApiUrl/banks/${bank.accountNum}", bank)
+        restTemplate.put("$bankApiUrl/${bank.accountNum}", bank)
         return bank
     }
 
     override fun deleteBank(accountNum: String) {
-        restTemplate.delete("$bankApiUrl/banks/$accountNum")
+        restTemplate.delete("$bankApiUrl/$accountNum")
     }
 }
-
-
-
-
