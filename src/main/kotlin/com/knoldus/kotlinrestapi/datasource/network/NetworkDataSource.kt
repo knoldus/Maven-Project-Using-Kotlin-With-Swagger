@@ -23,22 +23,29 @@ class NetworkDataSource(
             ?: throw IOException(" Could not fetch banks from the network")
     }
 
-
-
-
     override fun retrieveBank(accountNum: String): Bank {
-        TODO("Not yet implemented")
+        val response: ResponseEntity<Bank> =
+                restTemplate.getForEntity("http://54.193.31.159/banks/$accountNum", Bank::class.java)
+        return response.body
+                ?: throw IOException("Could not retrieve bank with account number $accountNum from the network")
     }
 
     override fun createBank(bank: Bank): Bank {
-        TODO("Not yet implemented")
+        restTemplate.postForObject<Unit>("http://54.193.31.159/banks", bank, Unit::class.java)
+        return bank
     }
 
     override fun updateBank(bank: Bank): Bank {
-        TODO("Not yet implemented")
+        restTemplate.put("http://54.193.31.159/banks/${bank.accountNum}", bank)
+        return bank
     }
-
     override fun deleteBank(accountNum: String) {
-        TODO("Not yet implemented")
+        restTemplate.delete("http://54.193.31.159/banks/$accountNum")
     }
 }
+
+
+
+
+
+
