@@ -9,9 +9,18 @@ import springfox.documentation.spi.DocumentationType
 import springfox.documentation.spring.web.plugins.Docket
 import java.util.function.Predicate
 
+/**
+ * Configuration class for SpringFox Swagger integration.
+ *
+ */
 @Configuration
 class SpringFoxConfiguration {
 
+    /**
+     * Creates a Docket bean for Swagger documentation generation.
+     *
+     * @return The Docket bean.
+     */
     @Bean
     fun api(): Docket? {
         return Docket(DocumentationType.SWAGGER_2)
@@ -21,6 +30,11 @@ class SpringFoxConfiguration {
                 .build()
     }
 
+    /**
+     * Creates an ApiInfo object for Swagger API information.
+     *
+     * @return The ApiInfo object.
+     */
     private fun apiInfo(): ApiInfo? {
         return ApiInfoBuilder()
                 .title("BANK'S SWAGGER API")
