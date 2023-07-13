@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rest-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rest-api
+  template:
+    metadata:
+      labels:
+        app: rest-api
+    spec:
+      containers:
+        - name: rest-api
+          image: ghcr.io/Shashikant-15/myapp/myimage:latest
+          ports:
+            - containerPort: 8080
+          env:
+          # Add environment variables here, if needed
+          resources:
+          # Set resource limits and requests, if needed
+      imagePullSecrets:
+        - name: dockerconfigjsonn-github-com
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rest-api-service
+spec:
+  selector:
+    app: rest-api
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+  type: LoadBalancer
